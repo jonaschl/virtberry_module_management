@@ -37,6 +37,7 @@ def get_enabled_modules():
 class virtberry_module:
     def __init__(self, name):
         self.name = name
+        self.config_file = "{0}/{1}.json".format(get_path_module_config(), self.name)
 
     def install(self, path):
         pip.main(['install', path])
@@ -53,15 +54,15 @@ class virtberry_module:
         self.set_attributes("status", "disabled")
 
     def set_attributes(self, attr, value):
-        with open("{0}/{1}.json".format(get_path_module_config(), self.name),"r") as file:
+        with open(self.config_file,"r") as file:
             data = json.load(file)
             new = {}
             new.setdefault(attr, value)
             data.update(new)
-            with open("{0}/{1}.json".format(get_path_module_config(), self.name),"w") as file:
+            with open(self.config_file,"w") as file:
                 json.dump(data, file, indent=4)
 
     def get_attributes(self, attr):
-        with open("{}".format(self.config_file),"r") as file:
+        with open(self.config_file,"r") as file:
             data = json.load(file)
             return data.get(attr)
